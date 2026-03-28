@@ -1,0 +1,13 @@
+venv/
+data/*.csv
+data/*.xlsx
+data/raw/
+data/processed/
+data/reception_excels/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+*.tmp
+*.log
