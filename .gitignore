@@ -1,13 +1,24 @@
+# Entorno virtual
 venv/
-data/*.csv
-data/*.xlsx
-data/raw/
-data/processed/
-data/reception_excels/
+env/
+.env/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
 .ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Sistema
 .DS_Store
+Thumbs.db
+
+# IDEs
 .vscode/
-*.tmp
-*.log
+.idea/
+
+# Datos sensibles
+*.csv
+*.db
+*.sqlite
