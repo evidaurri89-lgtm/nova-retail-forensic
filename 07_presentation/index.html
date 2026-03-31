@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA RETAIL — Risk Intelligence Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- LEAFLET.JS (Mapa real interactivo) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ===================== -->
+    <!-- SECCIÓN 1: HERO       -->
+    <!-- ===================== -->
+    <header class="hero-premium">
+      <div class="hero-bg-mesh"></div>
+      <div class="hero-bg-lines"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="badge-tech"><span class="dot-pulse"></span>DIAGNÓSTICO FORENSE DE PÉRDIDAS v2.4</div>
+          <div class="title-wrapper">
+            <h1 class="title-outline">NOVA</h1>
+            <h1 class="title-solid">RETAIL<span class="accent-dot">.</span></h1>
+          </div>
+          <p class="hero-lead">
+            Consolidación ejecutiva de hallazgos críticos sobre discrepancias de inventario, 
+            Shadow Inventory (Ghost SKUs) y priorización de riesgo operativo.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" id="btn-scroll-map">
+              Ver Mapa de Riesgo
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <div class="scan-status">
+              <span class="status-label">ESTADO DE INVESTIGACIÓN</span>
+              <span class="status-val" style="color: var(--accent-red);">FASE 4: COMPLETA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visuals">
+          <div class="glass-widget widget-main floating-slow">
+            <div class="widget-header">
+              <span>Máx. Discrepancia Detectada</span>
+              <div class="icon-box red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/></svg></div>
+            </div>
+            <div class="widget-value highlight-red">20.5%</div>
+            <div class="mini-chart">
+              <svg viewBox="0 0 200 40" preserveAspectRatio="none">
+                <path d="M0,40 L0,20 C20,20 30,35 50,25 C70,15 80,30 100,20 C120,10 130,5 150,15 C170,25 180,5 200,10 L200,40 Z" fill="url(#grad-red)" opacity="0.2"/>
+                <path d="M0,20 C20,20 30,35 50,25 C70,15 80,30 100,20 C120,10 130,5 150,15 C170,25 180,5 200,10" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <defs><linearGradient id="grad-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
+              </svg>
+            </div>
+          </div>
+          <div class="glass-widget widget-small w-top-right floating-fast">
+            <div class="widget-header"><span>Ventana Atípica</span></div>
+            <div class="widget-value highlight-amber">05:00<span class="unit">AM</span></div>
+            <div class="progress-bar"><div class="progress-fill amber" style="width: 100%"></div></div>
+          </div>
+          <div class="glass-widget widget-small w-bottom-left floating-medium">
+            <div class="widget-header"><span>Intervención Inmediata</span></div>
+            <div class="widget-value highlight-blue">8 <span class="unit">Tiendas</span></div>
+            <div class="radar-scan"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================= -->
+    <!-- SECCIÓN 2: MAPA REAL      -->
+    <!-- (Leaflet se inyecta aquí) -->
+    <!-- ========================= -->
+    <section class="map-section" id="map-section">
+      <div class="evidence-container">
+        
+        <div class="ops-header">
+          <div>
+            <h2 class="ops-title">Geospatial Risk Map <span>// Corredor Norte · México</span></h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">
+              Haz clic en cualquier nodo para ver el detalle forense de la tienda.
+            </p>
+          </div>
+          <div class="ops-filters">
+            <div class="gl-item"><span class="gl-dot red" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent-red); box-shadow: 0 0 8px var(--accent-red); margin-right:6px;"></span>Tier 1 Crítico</div>
+            <div class="gl-item"><span class="gl-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber); margin-right:6px;"></span>Tier 2 Watchlist</div>
+            <div class="gl-item"><span class="gl-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent-blue); margin-right:6px;"></span>Tier 3 Normal</div>
+          </div>
+        </div>
+
+        <!-- Contenedor del mapa Leaflet -->
+        <div id="risk-map"></div>
+
+      </div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- SECCIÓN 3: MATRIZ DE RIESGO -->
+    <!-- ========================== -->
+    <section class="ops-section" id="risk-matrix">
+      <div class="ops-container">
+        <div class="ops-header">
+          <h2 class="ops-title">Desglose de Nodos <span>// Data Table</span></h2>
+          <div class="ops-filters">
+            <button class="filter-btn active">Todos</button>
+            <button class="filter-btn">Tier 1 (Quirúrgico)</button>
+            <button class="filter-btn">Tier 2 (Prevención)</button>
+            <button class="filter-btn">Tier 3 (Baseline)</button>
+          </div>
+        </div>
+
+        <div class="ops-grid">
+          <div class="nodes-column" style="max-height: 700px; overflow-y: auto; padding-right: 15px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;">
+
+            <!-- TIER 1 -->
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-112</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Monterrey Cumbres</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">20.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-034</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Saltillo Norte</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">19.2%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-076</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Torreón Galerías</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">18.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-025</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Nuevo Laredo Centro</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">17.8%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-102</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Monterrey Sur</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">16.4%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-088</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Apodaca Aeropuerto</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">15.0%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-055</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Reynosa Frontera</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">14.2%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+            <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-091</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Santa Catarina</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">13.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
+
+            <!-- TIER 2 -->
+            <div class="node-card warning"><div class="node-top"><div class="node-id"><span class="node-dot amber"></span>MX-089</div><div class="node-badge amber">TIER 2</div></div><h3 class="node-name">San Nicolás Centro</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-amber">13.0%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">Irregular</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-amber">Riesgo Alto</span></div></div></div>
+            <div class="node-card warning"><div class="node-top"><div class="node-id"><span class="node-dot amber"></span>MX-044</div><div class="node-badge amber">TIER 2</div></div><h3 class="node-name">Saltillo Sur</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-amber">10.0%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">Irregular</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-amber">Riesgo</span></div></div></div>
+            <div class="node-card warning"><div class="node-top"><div class="node-id"><span class="node-dot amber"></span>MX-062</div><div class="node-badge amber">TIER 2</div></div><h3 class="node-name">Monclova Industrial</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-amber">8.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">Irregular</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-amber">Watchlist</span></div></div></div>
+
+            <!-- TIER 3 -->
+            <div class="node-card stable"><div class="node-top"><div class="node-id"><span class="node-dot blue"></span>MX-041</div><div class="node-badge blue">TIER 3</div></div><h3 class="node-name">Guadalupe Sur (Baseline)</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val" style="color:var(--accent-blue)">2.1%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">12:00 PM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val" style="color:var(--accent-blue)">Limpios</span></div></div></div>
+            <div class="node-card stable"><div class="node-top"><div class="node-id"><span class="node-dot blue"></span>MX-105</div><div class="node-badge blue">TIER 3</div></div><h3 class="node-name">San Pedro Valle (Baseline)</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val" style="color:var(--accent-blue)">1.8%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">14:30 PM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val" style="color:var(--accent-blue)">Limpios</span></div></div></div>
+
+          </div>
+
+          <div class="feed-column">
+            <div class="feed-header"><div class="feed-title"><span class="pulse-ring" style="background: var(--accent-blue);"></span>AUDIT TRAIL // CONCLUSIONES</div></div>
+            <div class="feed-list">
+              <div class="feed-item severity-high"><div class="f-time">[ MATRIZ ]</div><div class="f-content"><div class="f-node">PRIORIZACIÓN ESTRUCTURAL</div><div class="f-desc">Convergencia de señales en Tier 1: Pérdida material + Horario atípico. Las 8 tiendas muestran el mismo patrón sistemático.</div></div></div>
+              <div class="feed-item severity-medium"><div class="f-time">[ FASE 1 ]</div><div class="f-content"><div class="f-node">DESPACHO VS RECEPCIÓN</div><div class="f-desc">Ruta Norte presenta patrón de recepciones 05:00 AM incompatible con ruido operativo normal.</div></div></div>
+              <div class="feed-item severity-high"><div class="f-time">[ FASE 2 ]</div><div class="f-content"><div class="f-node">SHADOW INVENTORY</div><div class="f-desc">Detección de "Apple Ghosts" (visibles en SAP, invisibles en AS400). Movilización física activa confirmada.</div></div></div>
+              <div class="feed-item severity-low"><div class="f-time">[ FASE 3 ]</div><div class="f-content"><div class="f-node">RECONCILIACIÓN</div><div class="f-desc">Fallas estructurales en catálogo AS400. Decisión: Reconciliación selectiva por SKUs de alto valor.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- SECCIÓN 4: EVIDENCIA       -->
+    <!-- ========================== -->
+    <section class="evidence-section">
+      <div class="evidence-container">
+        <div class="evidence-header"><h2 class="ops-title">Evidencia Técnica <span>// Vectores de Vulnerabilidad</span></h2></div>
+        <div class="evidence-grid">
+          
+          <div class="glass-panel evidence-card">
+            <div class="card-tag red">VECTOR 01</div>
+            <h3 class="card-title">Anomalía: Patrón 05:00 AM</h3>
+            <p class="card-desc">Las 8 tiendas Tier 1 operan recepciones en ventana atípica, totalmente separadas del clúster de la red normal (08:00–19:00).</p>
+            <div class="scatter-plot">
+              <div class="y-axis-label">Discrepancia %</div>
+              <div class="plot-area">
+                <div class="dot normal" style="bottom: 8%; left: 35%;"></div>
+                <div class="dot normal" style="bottom: 12%; left: 38%;"></div>
+                <div class="dot normal" style="bottom: 5%; left: 42%;"></div>
+                <div class="dot normal" style="bottom: 18%; left: 45%;"></div>
+                <div class="dot normal" style="bottom: 10%; left: 48%;"></div>
+                <div class="dot normal" style="bottom: 6%; left: 50%;"></div>
+                <div class="dot normal" style="bottom: 14%; left: 53%;"></div>
+                <div class="dot normal" style="bottom: 11%; left: 56%;"></div>
+                <div class="dot normal" style="bottom: 7%; left: 59%;"></div>
+                <div class="dot normal" style="bottom: 15%; left: 62%;"></div>
+                <div class="dot normal" style="bottom: 9%; left: 66%;"></div>
+                <div class="dot normal" style="bottom: 13%; left: 70%;"></div>
+                <div class="dot normal" style="bottom: 5%; left: 73%;"></div>
+                <div class="dot normal" style="bottom: 16%; left: 76%;"></div>
+                <div class="dot normal" style="bottom: 8%; left: 79%;"></div>
+                <div class="dot normal" style="bottom: 10%; left: 40%;"></div>
+                <div class="dot normal" style="bottom: 7%; left: 44%;"></div>
+                <div class="dot normal" style="bottom: 11%; left: 47%;"></div>
+                <div class="dot normal" style="bottom: 13%; left: 51%;"></div>
+                <div class="dot normal" style="bottom: 9%; left: 55%;"></div>
+                <div class="dot" style="background: var(--accent-amber); bottom: 46%; left: 90%; box-shadow: 0 0 10px rgba(255,170,0,0.5);" title="Tier 2"></div>
+                <div class="dot" style="background: var(--accent-amber); bottom: 42%; left: 28%; box-shadow: 0 0 10px rgba(255,170,0,0.5);" title="Tier 2"></div>
+                <div class="dot" style="background: var(--accent-amber); bottom: 34%; left: 16%; box-shadow: 0 0 10px rgba(255,170,0,0.5);" title="Tier 2"></div>
+                <div class="dot anomaly pulse" style="bottom: 82%; left: 20.8%;" title="MX-112 | 05:00 AM | 20.5%"></div>
+                <div class="dot anomaly pulse" style="bottom: 78%; left: 20.5%;" title="MX-034 | 04:55 AM | 19.2%"></div>
+                <div class="dot anomaly pulse" style="bottom: 74%; left: 21.2%;" title="MX-076 | 05:05 AM | 18.5%"></div>
+                <div class="dot anomaly pulse" style="bottom: 69%; left: 21.0%;" title="MX-025 | 05:02 AM | 17.8%"></div>
+                <div class="dot anomaly pulse" style="bottom: 64%; left: 20.3%;" title="MX-102 | 04:52 AM | 16.4%"></div>
+                <div class="dot anomaly pulse" style="bottom: 60%; left: 21.5%;" title="MX-088 | 05:10 AM | 15.0%"></div>
+                <div class="dot anomaly pulse" style="bottom: 56%; left: 20.8%;" title="MX-055 | 05:00 AM | 14.2%"></div>
+                <div class="dot anomaly pulse" style="bottom: 52%; left: 20.6%;" title="MX-091 | 04:58 AM | 13.5%"></div>
+                <div class="time-marker" style="left: 20.8%;"><div class="marker-line red"></div><div class="marker-time">05:00 AM</div></div>
+                <div class="time-marker" style="left: 55%;"><div class="marker-line blue"></div><div class="marker-time">12:00 PM (Normal)</div></div>
+              </div>
+              <div class="x-axis-label">Hora de Recepción (00:00 — 24:00)</div>
+            </div>
+          </div>
+
+          <div class="glass-panel evidence-card">
+            <div class="card-tag amber">VECTOR 02</div>
+            <h3 class="card-title">Shadow Inventory // "Apple Ghosts"</h3>
+            <p class="card-desc">Productos premium detectados físicamente en movimiento, invisibles para el sistema legacy (AS400). Vulnerabilidad estructural de trazabilidad confirmada.</p>
+            <div class="db-compare">
+              <div class="db-system sap">
+                <div class="db-header">🔵 SAP S/4HANA</div>
+                <div class="db-row"><span class="db-key">SKU:</span><span class="db-val">APP-IP13-256</span></div>
+                <div class="db-row"><span class="db-key">Desc:</span><span class="db-val">iPhone 13 Pro 256GB</span></div>
+                <div class="db-row"><span class="db-key">Status:</span><span class="db-val text-blue">ACTIVE</span></div>
+                <div class="db-row"><span class="db-key">Price:</span><span class="db-val">$25,999 MXN</span></div>
+              </div>
+              <div class="db-connector">
+                <svg width="40" height="20" viewBox="0 0 40 20"><path d="M0 10 L40 10" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="4 4"/></svg>
+                <div class="transfer-error">SYNC FAIL</div>
+              </div>
+              <div class="db-system as400 glitch-box">
+                <div class="db-header">🔴 LEGACY AS400</div>
+                <div class="db-row"><span class="db-key">SKU:</span><span class="db-val">APP-IP13-256</span></div>
+                <div class="db-row"><span class="db-key">Desc:</span><span class="db-val">IPHONE 13 PRO...</span></div>
+                <div class="db-row"><span class="db-key">Category:</span><span class="db-val text-red">EMPTY</span></div>
+                <div class="db-row"><span class="db-key">Price:</span><span class="db-val text-red error-blink">NULL</span></div>
+              </div>
+            </div>
+            <div class="methodology-note">
+              <strong>Decisión Analítica:</strong> Reconciliación selectiva priorizando SKUs de alto valor. Limpiar los 14,000 SKUs completos no es operativamente eficiente en esta fase crítica.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- SECCIÓN 5: ACTION PLAN     -->
+    <!-- ========================== -->
+    <section class="action-section">
+      <div class="evidence-container">
+        <div class="evidence-header">
+          <h2 class="ops-title">Executive Action Plan <span>// Next Steps</span></h2>
+        </div>
+        <div class="action-grid">
+          <div class="action-card">
+            <div class="ac-number">01</div>
+            <h3>Intervención Quirúrgica</h3>
+            <p>Ejecutar auditoría física inmediata y controlada en las 8 tiendas <strong>Tier 1</strong> de la Ruta Norte, congelando inventario de electrónicos de alto valor.</p>
+          </div>
+          <div class="action-card">
+            <div class="ac-number">02</div>
+            <h3>Trazabilidad de Usuarios</h3>
+            <p>Integrar metadata de autorización para identificar qué usuarios están validando recepciones a las <strong>05:00 AM</strong> fuera de protocolo.</p>
+          </div>
+          <div class="action-card">
+            <div class="ac-number">03</div>
+            <h3>Reconciliación Selectiva</h3>
+            <p>Priorizar la limpieza y matching de catálogo (SAP vs AS400) exclusivamente para <strong>SKUs de alto valor</strong>, maximizando la recuperación de capital.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>
