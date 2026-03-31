@@ -22,6 +22,17 @@ Incluye:
 
 ## Estructura del Proyecto
 
+```
+nova-retail-forensic/
+├── 00_data_generation/     # Scripts de generación de datos sintéticos
+├── 01_exploration/         # Auditoría inicial de datos
+├── 02_cleaning/            # Reconciliación de catálogo SKU
+├── 03_forensic_analysis/   # Análisis forense principal
+├── 05_sql_forensics/       # Consultas SQL operativas
+├── 07_presentation/        # Dashboard HTML interactivo
+└── 08_executive_report/    # Reporte ejecutivo formal
+```
+
 - 00_data_generation: Scripts de generacion de datos sinteticos
 - 01_exploration: Auditoria inicial de datos
 - 02_cleaning: Reconciliacion de catalogo SKU (SAP vs AS400)
@@ -68,6 +79,16 @@ git clone https://github.com/evidaurri89-lgtm/nova-retail-forensic.git
 cd nova-retail-forensic
 pip install -r requirements.txt
 jupyter lab
+
+## Notebooks
+
+Todos los notebooks se pueden ver directamente en GitHub con graficos y outputs incrustados.
+
+- 01_initial_data_audit.ipynb - Auditoria inicial de datos
+- 02_sku_reconciliation.ipynb - Reconciliacion de catalogo SAP vs AS400
+- 03_dispatch_vs_reception.ipynb - Analisis forense de despacho vs recepcion
+- 04_shadow_inventory_and_ghost_skus.ipynb - Deteccion de Ghost SKUs
+- 05_unified_risk_matrix.ipynb - Matriz de riesgo unificada
 
 ## Disclaimer
 
