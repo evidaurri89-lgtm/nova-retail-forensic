@@ -147,7 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (criticalStoresEl) criticalStoresEl.innerText = kpis.critical_stores;
       
       const hourEl = document.getElementById('kpi-hour');
-      if (hourEl) hourEl.innerText = kpis.pattern_hour;
+      if (hourEl) {
+        // CORRECCIÓN: Separamos la hora ("05:00") del sufijo ("AM") para inyectarlo con su diseño original
+        const parts = kpis.pattern_hour.split(' ');
+        if (parts.length > 1) {
+          hourEl.innerHTML = `${parts[0]}<span class="unit">${parts[1]}</span>`;
+        } else {
+          hourEl.innerHTML = kpis.pattern_hour;
+        }
+      }
     })
     .catch(error => {
       console.error('❌ Error cargando los KPIs reales:', error);
