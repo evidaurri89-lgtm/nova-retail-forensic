@@ -6,7 +6,6 @@
   <title>NOVA RETAIL — Risk Intelligence Report</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
-  <!-- LEAFLET.JS (Mapa real interactivo) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
@@ -15,9 +14,6 @@
 <body>
   <div class="app">
 
-    <!-- ===================== -->
-    <!-- SECCIÓN 1: HERO       -->
-    <!-- ===================== -->
     <header class="hero-premium">
       <div class="hero-bg-mesh"></div>
       <div class="hero-bg-lines"></div>
@@ -54,7 +50,7 @@
               <span>Máx. Discrepancia Detectada</span>
               <div class="icon-box red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/></svg></div>
             </div>
-            <div class="widget-value highlight-red">20.5%</div>
+            <div class="widget-value highlight-red" id="kpi-max-disc">20.5%</div>
             <div class="mini-chart">
               <svg viewBox="0 0 200 40" preserveAspectRatio="none">
                 <path d="M0,40 L0,20 C20,20 30,35 50,25 C70,15 80,30 100,20 C120,10 130,5 150,15 C170,25 180,5 200,10 L200,40 Z" fill="url(#grad-red)" opacity="0.2"/>
@@ -65,22 +61,18 @@
           </div>
           <div class="glass-widget widget-small w-top-right floating-fast">
             <div class="widget-header"><span>Ventana Atípica</span></div>
-            <div class="widget-value highlight-amber">05:00<span class="unit">AM</span></div>
+            <div class="widget-value highlight-amber" id="kpi-hour">05:00 AM</div>
             <div class="progress-bar"><div class="progress-fill amber" style="width: 100%"></div></div>
           </div>
           <div class="glass-widget widget-small w-bottom-left floating-medium">
             <div class="widget-header"><span>Intervención Inmediata</span></div>
-            <div class="widget-value highlight-blue">8 <span class="unit">Tiendas</span></div>
+            <div class="widget-value highlight-blue"><span id="kpi-critical">8</span> <span class="unit">Tiendas</span></div>
             <div class="radar-scan"></div>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- ========================= -->
-    <!-- SECCIÓN 2: MAPA REAL      -->
-    <!-- (Leaflet se inyecta aquí) -->
-    <!-- ========================= -->
     <section class="map-section" id="map-section">
       <div class="evidence-container">
         
@@ -98,15 +90,11 @@
           </div>
         </div>
 
-        <!-- Contenedor del mapa Leaflet -->
         <div id="risk-map"></div>
 
       </div>
     </section>
 
-    <!-- ========================== -->
-    <!-- SECCIÓN 3: MATRIZ DE RIESGO -->
-    <!-- ========================== -->
     <section class="ops-section" id="risk-matrix">
       <div class="ops-container">
         <div class="ops-header">
@@ -122,7 +110,6 @@
         <div class="ops-grid">
           <div class="nodes-column" style="max-height: 700px; overflow-y: auto; padding-right: 15px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;">
 
-            <!-- TIER 1 -->
             <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-112</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Monterrey Cumbres</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">20.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
             <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-034</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Saltillo Norte</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">19.2%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
             <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-076</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Torreón Galerías</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">18.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
@@ -132,12 +119,10 @@
             <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-055</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Reynosa Frontera</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">14.2%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
             <div class="node-card critical"><div class="node-top"><div class="node-id"><span class="node-dot red"></span>MX-091</div><div class="node-badge red">TIER 1</div></div><h3 class="node-name">Santa Catarina</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-red">13.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">05:00 AM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-red">Detectados</span></div></div></div>
 
-            <!-- TIER 2 -->
             <div class="node-card warning"><div class="node-top"><div class="node-id"><span class="node-dot amber"></span>MX-089</div><div class="node-badge amber">TIER 2</div></div><h3 class="node-name">San Nicolás Centro</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-amber">13.0%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">Irregular</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-amber">Riesgo Alto</span></div></div></div>
             <div class="node-card warning"><div class="node-top"><div class="node-id"><span class="node-dot amber"></span>MX-044</div><div class="node-badge amber">TIER 2</div></div><h3 class="node-name">Saltillo Sur</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-amber">10.0%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">Irregular</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-amber">Riesgo</span></div></div></div>
             <div class="node-card warning"><div class="node-top"><div class="node-id"><span class="node-dot amber"></span>MX-062</div><div class="node-badge amber">TIER 2</div></div><h3 class="node-name">Monclova Industrial</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val text-amber">8.5%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">Irregular</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val text-amber">Watchlist</span></div></div></div>
 
-            <!-- TIER 3 -->
             <div class="node-card stable"><div class="node-top"><div class="node-id"><span class="node-dot blue"></span>MX-041</div><div class="node-badge blue">TIER 3</div></div><h3 class="node-name">Guadalupe Sur (Baseline)</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val" style="color:var(--accent-blue)">2.1%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">12:00 PM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val" style="color:var(--accent-blue)">Limpios</span></div></div></div>
             <div class="node-card stable"><div class="node-top"><div class="node-id"><span class="node-dot blue"></span>MX-105</div><div class="node-badge blue">TIER 3</div></div><h3 class="node-name">San Pedro Valle (Baseline)</h3><div class="node-metrics"><div class="n-metric"><span class="nm-label">Discrepancia</span><span class="nm-val" style="color:var(--accent-blue)">1.8%</span></div><div class="n-metric"><span class="nm-label">Recepción</span><span class="nm-val">14:30 PM</span></div><div class="n-metric"><span class="nm-label">Ghost SKUs</span><span class="nm-val" style="color:var(--accent-blue)">Limpios</span></div></div></div>
 
@@ -156,9 +141,6 @@
       </div>
     </section>
 
-    <!-- ========================== -->
-    <!-- SECCIÓN 4: EVIDENCIA       -->
-    <!-- ========================== -->
     <section class="evidence-section">
       <div class="evidence-container">
         <div class="evidence-header"><h2 class="ops-title">Evidencia Técnica <span>// Vectores de Vulnerabilidad</span></h2></div>
@@ -242,9 +224,6 @@
       </div>
     </section>
 
-    <!-- ========================== -->
-    <!-- SECCIÓN 5: ACTION PLAN     -->
-    <!-- ========================== -->
     <section class="action-section">
       <div class="evidence-container">
         <div class="evidence-header">

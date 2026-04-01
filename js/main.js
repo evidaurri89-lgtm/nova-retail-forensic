@@ -79,14 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
       3:'TIER 3 — BASELINE NORMAL'
     };
 
-    // Líneas de ruta logística
     stores.filter(s => s.tier === 1 && s.id !== 'MX-112').forEach(s => {
       L.polyline([[25.7197,-100.3632],[s.lat,s.lng]], {
         color:'#ff3366', weight:1.5, opacity:0.5, dashArray:'6 10'
       }).addTo(map);
     });
 
-    // Marcadores
     stores.forEach(s => {
       const color  = colors[s.tier];
       const cName  = colorName[s.tier];
@@ -129,4 +127,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setTimeout(initMap, 400);
+
+  // 4. CONECTAR DATOS REALES (DATA BINDING)
+  fetch('data/kpis.json')
+    .then(response => {
+      if (!response.ok) throw new Error('No se encontró el archivo JSON');
+      return response.json();
+    })
+    .then(kpis => {
+      console.log('🔥 Datos forenses reales cargados:', kpis);
+      
+      const totalRiskEl = document.getElementById('kpi-total-risk');
+      if (totalRiskEl) totalRiskEl.innerText = kpis.total_risk_value;
+
+      const maxDiscEl = document.getElementById('kpi-max-disc');
+      if (maxDiscEl) maxDiscEl.innerText = kpis.max_discrepancy;
+
+      const criticalStoresEl = document.getElementById('kpi-critical');
+      if (criticalStoresEl) criticalStoresEl.innerText = kpis.critical_stores;
+      
+      const hourEl = document.getElementById('kpi-hour');
+      if (hourEl) hourEl.innerText = kpis.pattern_hour;
+    })
+    .catch(error => {
+      console.error('❌ Error cargando los KPIs reales:', error);
+    });
+
 });
