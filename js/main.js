@@ -42,17 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const stores = [
+      // 5 Tiendas Tier 1
       { id:'MX-112', name:'Monterrey Cumbres',  lat:25.7197, lng:-100.3632, disc:'20.5%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
       { id:'MX-034', name:'Saltillo Norte',      lat:25.4832, lng:-100.9737, disc:'19.2%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
       { id:'MX-076', name:'Torreón Galerías',    lat:25.5428, lng:-103.4068, disc:'18.5%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
       { id:'MX-025', name:'Nuevo Laredo Centro', lat:27.4769, lng:-99.5152,  disc:'17.8%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
       { id:'MX-102', name:'Monterrey Sur',       lat:25.6204, lng:-100.2938, disc:'16.4%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-088', name:'Apodaca Aeropuerto',  lat:25.7868, lng:-100.1875, disc:'15.0%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-055', name:'Reynosa Frontera',    lat:26.0820, lng:-98.2720,  disc:'14.2%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-091', name:'Santa Catarina',      lat:25.6736, lng:-100.4582, disc:'13.5%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
+      // Tier 2
       { id:'MX-089', name:'San Nicolás Centro',  lat:25.7456, lng:-100.2997, disc:'13.0%', hora:'Irregular',ghost:'Riesgo Alto', tier:2 },
       { id:'MX-044', name:'Saltillo Sur',        lat:25.3910, lng:-100.9300, disc:'10.0%', hora:'Irregular',ghost:'Riesgo',      tier:2 },
       { id:'MX-062', name:'Monclova Industrial', lat:26.9097, lng:-101.4218, disc:'8.5%',  hora:'Irregular',ghost:'Watchlist',   tier:2 },
+      // Tier 3
       { id:'MX-041', name:'Guadalupe Sur',       lat:25.6570, lng:-100.2602, disc:'2.1%',  hora:'12:00 PM', ghost:'Limpios',    tier:3 },
       { id:'MX-105', name:'San Pedro Valle',     lat:25.6545, lng:-100.4000, disc:'1.8%',  hora:'14:30 PM', ghost:'Limpios',    tier:3 },
     ];
@@ -148,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const hourEl = document.getElementById('kpi-hour');
       if (hourEl) {
-        // CORRECCIÓN: Separamos la hora ("05:00") del sufijo ("AM") para inyectarlo con su diseño original
         const parts = kpis.pattern_hour.split(' ');
         if (parts.length > 1) {
           hourEl.innerHTML = `${parts[0]}<span class="unit">${parts[1]}</span>`;
