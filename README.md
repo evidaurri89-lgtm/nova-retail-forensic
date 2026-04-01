@@ -1,100 +1,45 @@
-# NOVA RETAIL — Forensic Loss Prevention Diagnostic
+# 🕵️‍♀️ NOVA RETAIL: Forensic Loss Prevention & Risk Intelligence
 
-![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
-![Python](https://img.shields.io/badge/Python-3.13-blue)
+[![Live Dashboard](https://img.shields.io/badge/Live_Dashboard-Ver_Proyecto_Web-ff3366?style=for-the-badge)](https://evidaurri89-lgtm.github.io/nova-retail-forensic/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
 
-## Resumen del Proyecto
+> **Caso de Estudio Analítico:** Consolidación ejecutiva de hallazgos críticos sobre discrepancias de inventario, detección de *Shadow Inventory* (Ghost SKUs) y priorización de riesgo operativo mediante un pipeline de datos end-to-end.
 
-Diagnostico forense end-to-end que simula un caso real de prevencion de perdidas para una cadena de retail de 187 tiendas con 49.9M MXN en riesgo operativo.
+![Nova Retail Dashboard Hero](assets/hero-screenshot.png)
 
-El analisis identifico un patron sistematico de discrepancias de inventario (13-20.5%) concentrado en la Ruta Norte, con recepciones atipicas a las 05:00 AM y productos de alto valor invisibles para el sistema legacy (Ghost SKUs).
+## 📊 El Problema de Negocio
+Durante una auditoría en la red logística del Corredor Norte, se detectaron discrepancias atípicas entre los registros de despacho (SAP S/4HANA) y las recepciones en tienda (AS400). El análisis inicial reveló la existencia de "Apple Ghosts" (productos premium de alto valor movilizados físicamente pero invisibles para el sistema legacy). 
 
-## Presentacion Interactiva
+El objetivo de este proyecto fue pasar de un análisis forense de datos crudos a una **herramienta interactiva de decisión ejecutiva** para el comité de prevención de pérdidas.
 
-Ver Dashboard en Vivo: https://evidaurri89-lgtm.github.io/nova-retail-forensic/07_presentation/
+## 🎯 Hallazgos y Resultados Clave (The 5-5-1 Framework)
+En lugar de abrumar a la operación con decenas de tiendas sospechosas, el modelo priorizó el riesgo basándose en la convergencia de anomalías (pérdida material + horario atípico + vulnerabilidad de sistema):
 
-Incluye:
-- Mapa geoespacial interactivo (Leaflet.js) con los nodos de riesgo
-- Matriz de riesgo filtrable por Tier 1, 2 y 3
-- Evidencia tecnica del patron 05:00 AM
-- Comparativo SAP vs AS400 (Ghost SKUs)
-- Executive Action Plan
+* **Vulnerabilidad Estructural (05:00 AM):** Se detectó un patrón sistemático de recepciones en una ventana atípica, totalmente separada del clúster de la red normal (08:00 a 19:00).
+* **Intervención Quirúrgica (Tier 1):** Aislamiento de **5 tiendas críticas** (Max. discrepancia del 20.5% en `NOVA-OBR-156`) que requieren auditoría física inmediata y congelamiento de inventario. Destaca la tienda `NOVA-MAZ-171` con una anomalía crítica de *Ghost Store* confirmada.
+* **Separación de Señal y Ruido:** El 94% de la operación fue clasificada como *Baseline normal*, lo que valida estadísticamente la gravedad y urgencia de las anomalías detectadas en el Tier 1.
 
-## Estructura del Proyecto
+## 🛠️ Arquitectura Técnica y Stack
 
-```
+Este proyecto no es solo un Jupyter Notebook estático; es un *pipeline* completo de datos conectado a una interfaz de usuario viva:
+
+1.  **Ingeniería de Datos (Python/Pandas):** Limpieza, consolidación de bases de datos distribuidas y cruces forenses de alta dimensionalidad.
+2.  **Diseño de Matriz de Riesgo:** Modelado de priorización para clasificación de tiendas en niveles (Tiers) de intervención.
+3.  **Data Binding & CI/CD:** Exportación automatizada de KPIs y DataFrames a formato JSON para consumo web.
+4.  **Visualización Ejecutiva (HTML/CSS/Vanilla JS):** Un dashboard "Dark Premium" interactivo diseñado para comités directivos.
+5.  **Geospatial Intelligence:** Integración con **Leaflet.js** para el mapeo interactivo de rutas de riesgo.
+
+## 📁 Estructura del Proyecto
+
+```text
 nova-retail-forensic/
-├── 00_data_generation/     # Scripts de generación de datos sintéticos
-├── 01_exploration/         # Auditoría inicial de datos
-├── 02_cleaning/            # Reconciliación de catálogo SKU
-├── 03_forensic_analysis/   # Análisis forense principal
-├── 05_sql_forensics/       # Consultas SQL operativas
-├── 07_presentation/        # Dashboard HTML interactivo
-└── 08_executive_report/    # Reporte ejecutivo formal
-```
-
-- 00_data_generation: Scripts de generacion de datos sinteticos
-- 01_exploration: Auditoria inicial de datos
-- 02_cleaning: Reconciliacion de catalogo SKU (SAP vs AS400)
-- 03_forensic_analysis: Analisis forense principal
-  - 03_dispatch_vs_reception.ipynb
-  - 04_shadow_inventory_and_ghost_skus.ipynb
-  - 05_unified_risk_matrix.ipynb
-- 07_presentation: Dashboard HTML interactivo
-- 08_executive_report: Reporte ejecutivo formal
-
-## Metodologia (4 Fases)
-
-Fase 1: Reconciliacion de Catalogo
-Cruce entre SAP S/4HANA y sistema legacy AS400. Identificacion de SKUs con trazabilidad incompleta. Decision: reconciliacion selectiva por valor economico.
-
-Fase 2: Analisis Forense de Despacho vs Recepcion
-Cruce de registros de despacho desde CEDIS vs recepciones en tienda. Hallazgo: 8 tiendas con discrepancias del 13-20.5% y recepciones a las 05:00 AM.
-
-Fase 3: Shadow Inventory y Ghost SKUs
-Identificacion de SKUs activos en SAP pero invisibles para AS400. Productos Apple con movilizacion fisica confirmada sin trazabilidad en legacy.
-
-Fase 4: Matriz de Riesgo Unificada
-Score compuesto por tienda integrando todos los vectores de riesgo. Estructura de Tiers operativamente accionable para escalamiento ejecutivo.
-
-## Hallazgos Criticos
-
-- Discrepancia: 8 tiendas con 13-20.5% vs menos del 5% normal
-- Temporal: Recepciones a las 05:00 AM exclusivamente en Ruta Norte
-- Catalogo: Ghost SKUs (Apple) visibles en SAP, precio NULL en AS400
-- Geografico: Concentracion 100% en corredor logistico Norte
-
-## Stack Tecnologico
-
-- Analisis de datos: Python, Pandas, NumPy
-- Machine Learning: Scikit-learn
-- Visualizacion: Plotly, Matplotlib, Seaborn
-- Geoespacial: Leaflet.js
-- Frontend: HTML5, CSS3, JavaScript
-- Control de versiones: Git / GitHub Pages
-
-## Instalacion
-
-git clone https://github.com/evidaurri89-lgtm/nova-retail-forensic.git
-cd nova-retail-forensic
-pip install -r requirements.txt
-jupyter lab
-
-## Notebooks
-
-Todos los notebooks se pueden ver directamente en GitHub con graficos y outputs incrustados.
-
-- 01_initial_data_audit.ipynb - Auditoria inicial de datos
-- 02_sku_reconciliation.ipynb - Reconciliacion de catalogo SAP vs AS400
-- 03_dispatch_vs_reception.ipynb - Analisis forense de despacho vs recepcion
-- 04_shadow_inventory_and_ghost_skus.ipynb - Deteccion de Ghost SKUs
-- 05_unified_risk_matrix.ipynb - Matriz de riesgo unificada
-
-## Disclaimer
-
-Nova Retail es una simulacion con fines de portafolio. Todos los datos son sinteticos y generados algoritmicamente. Este analisis no atribuye responsabilidad individual ni constituye evidencia legal.
-
-## Autor
-
-Denz One - Forensic Data Analyst
-GitHub: https://github.com/evidaurri89-lgtm
+│
+├── 01_exploration/         # Análisis exploratorio inicial de datos crudos
+├── 02_cleaning/            # Reconciliación de SKUs y limpieza estructural
+├── 03_forensic_analysis/   # Análisis de discrepancias y Matriz de Riesgo Ejecutiva
+│
+├── data/                   # Archivos JSON vivos generados por Python para el dashboard web
+├── css/ & js/              # Estilos UI premium y lógica de data-binding / Leaflet
+├── index.html              # Frontend del Dashboard Ejecutivo
+└── README.md               # Documentación del proyecto y conclusiones
