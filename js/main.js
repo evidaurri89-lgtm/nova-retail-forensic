@@ -42,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const stores = [
-      // 5 Tiendas Tier 1
-      { id:'MX-112', name:'Monterrey Cumbres',  lat:25.7197, lng:-100.3632, disc:'20.5%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-034', name:'Saltillo Norte',      lat:25.4832, lng:-100.9737, disc:'19.2%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-076', name:'Torreón Galerías',    lat:25.5428, lng:-103.4068, disc:'18.5%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-025', name:'Nuevo Laredo Centro', lat:27.4769, lng:-99.5152,  disc:'17.8%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
-      { id:'MX-102', name:'Monterrey Sur',       lat:25.6204, lng:-100.2938, disc:'16.4%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
+      // 5 Tiendas Tier 1 REALES
+      { id:'NOVA-OBR-156', name:'Ruta Norte', lat:25.7197, lng:-100.3632, disc:'20.5%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
+      { id:'NOVA-MAZ-047', name:'Ruta Norte', lat:25.4832, lng:-100.9737, disc:'20.3%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
+      { id:'NOVA-SAN-015', name:'Ruta Norte', lat:25.5428, lng:-103.4068, disc:'19.9%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
+      { id:'NOVA-TAM-067', name:'Ruta Norte', lat:27.4769, lng:-99.5152,  disc:'14.8%', hora:'05:00 AM', ghost:'Detectados',  tier:1 },
+      { id:'NOVA-MAZ-171', name:'Ruta Norte', lat:25.6204, lng:-100.2938, disc:'13.1%', hora:'05:00 AM', ghost:'Anomalía Crítica', tier:1 },
       // Tier 2
       { id:'MX-089', name:'San Nicolás Centro',  lat:25.7456, lng:-100.2997, disc:'13.0%', hora:'Irregular',ghost:'Riesgo Alto', tier:2 },
       { id:'MX-044', name:'Saltillo Sur',        lat:25.3910, lng:-100.9300, disc:'10.0%', hora:'Irregular',ghost:'Riesgo',      tier:2 },
@@ -79,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
       3:'TIER 3 — BASELINE NORMAL'
     };
 
-    stores.filter(s => s.tier === 1 && s.id !== 'MX-112').forEach(s => {
+    // Ajusté la condición para que no dibuje la línea sobre la primera tienda (NOVA-OBR-156) hacia sí misma
+    stores.filter(s => s.tier === 1 && s.id !== 'NOVA-OBR-156').forEach(s => {
       L.polyline([[25.7197,-100.3632],[s.lat,s.lng]], {
         color:'#ff3366', weight:1.5, opacity:0.5, dashArray:'6 10'
       }).addTo(map);
